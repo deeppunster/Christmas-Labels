@@ -12,7 +12,7 @@ Welcome to Christmas Labels's documentation!
 
    Summary Documentation
 
-
+   UML Diagrams
 
 Indices and tables
 ==================

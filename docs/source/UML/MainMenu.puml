@@ -1,0 +1,57 @@
+@startuml
+(Main Menu) as (main)
+User -> (main)
+
+(Manage Contacts) as (mc)
+(main) --> (mc)
+
+(Manage Contacts Screen) as (mcs)
+(mc) --> mcs
+
+(Print Labels) as (pl)
+(main) --> (pl)
+
+(Print Labels Screen) as (pls)
+(pl) --> (pls)
+
+(Other Activities) as (oa)
+(main) --> (oa)
+
+(Other Activities Screen) as (oas)
+(oa) --> (oas)
+
+(Quit) as (q)
+(main) --> (q)
+
+(Quit Screen) as (qs)
+(q) --> (qs)
+
+note right of (main)
+The main menu has choices for:
+- managing contacts,
+- printing labels,
+- other activities or
+- quit the application.
+end note
+
+@enduml
+
+
+
+
+
+
+
+
+
+
+note "User has filled, sealed\n and labeled a box." as N2
+(Checkin) .. N2
+
+note as N3
+Labels include a QR code, the product, year of expiration and
+optionally the part of the year (e.g. quarter it expires)
+end note
+N2 .. N3
+
+N3 ..(Use)
