@@ -88,4 +88,16 @@ files.  Since commas are very likely to be included in addresses, the file
 will use tabs to delimit fields rather than commas.  Also, any  new
 lines imbedded in the fields in the import file will be removed.
 
+Primary Interface
+#################
 
+The primary interface will be a standalone python program with a GUI
+interface.  The GUI will be using wxPython designed using Glade.  See the
+UML diagrams for the details.
+
+Data Repository
+###############
+
+The data for the names, addresses, etc. will be stored in a database.  Since
+the targeted user has no IT experience, the data will be stored in a Sqlite
+database since it does not require a server or other overhead.
