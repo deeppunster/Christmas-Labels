@@ -9,7 +9,9 @@ from logging import getLogger, debug, error
 from pathlib import Path
 from typing import Any, Union, Optional
 
-from ChristmasLabelsPkg.ChristmasLabelsGUI import MainMenuFrame
+import wx
+
+from ChristmasLabelsPkg.ChristmasLabelsGUI import MainMenuFrameClass
 
 __author__ = 'Travis Risner'
 __project__ = "Christmas-Labels"
@@ -19,45 +21,48 @@ __creation_date__ = "03/07/2019"
 log = None
 
 
-class ChristmasLabelsClass:
+class ChristmasLabelsClass(MainMenuFrameClass):
     """
     ChristmasLabelsClass - Manage christmas labels user interface.
     """
 
-    def __init__(self):
-        self.clg = MainMenuFrame()
+    def __init__(self, *args, **kwds):
+        MainMenuFrameClass.__init__(self, *args, **kwds)
 
-    def run_CLbls(self):
-        """
-        Top method for running Run the Christmas labels user interface..
+        return
 
-        :return:
-        """
-        pass
+    def on_button_quit_clicked(self, event):  # wxGlade:
+        # MainMenuFrameClass.<event_handler>
+        self.close()
 
 
-class Main:
+class Main(wx.App):
     """
     Main class to start things rolling.
     """
 
-    def __init__(self):
-        """
-        Get things started.
-        """
-        self.ChrLbls = None
-        return
+    # def __init__(self, mystery_parm):
+    #     """
+    #     Get things started.
+    #
+    #     :param mystery_parm: I have no idea why this is needed
+    #     """
+    #
+    #     super.__init__(mystery_parm)
+    #     self.ChrLbls_frame = None
+    #     return
 
-    def run_ChrLbls(self):
+    def OnInit(self):
         """
         Prepare to run Run the Christmas labels user interface..
 
         :return:
         """
-        self.ChrLbls = ChristmasLabelsClass()
         debug('Starting up ChrLbls')
-        self.ChrLbls.run_CLbls()
-        return
+        self.ChrLbls_frame = ChristmasLabelsClass(None, wx.ID_ANY, "")
+        self.SetTopWindow(self.ChrLbls_frame)
+        self.ChrLbls_frame.Show()
+        return True
 
     @staticmethod
     def start_logging(work_dir: Path, debug_name: str):
@@ -113,8 +118,8 @@ class Main:
 if __name__ == "__main__":
     workdir = Path.cwd()
     debug_file_name = 'debuginfo.yaml'
-    main = Main()
+    main = Main(0)
     main.start_logging(workdir, debug_file_name)
-    main.run_ChrLbls()
+    main.MainLoop()
 
 # EOF
