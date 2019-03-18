@@ -9,7 +9,12 @@ from logging import getLogger, debug, error
 from pathlib import Path
 from typing import Any, Union, Optional
 
-from ChristmasLabelsPkg.ChristmasLabelsGUI import MainMenuFrame
+import wx
+import gettext
+
+from ChristmasLabelsPkg.ORMTables import Contact, State, create_db
+from ChristmasLabelsPkg.ChristmasLabelsGUI import ChristmasLabelsApp, \
+    MainMenuFrameClass
 
 __author__ = 'Travis Risner'
 __project__ = "Christmas-Labels"
@@ -19,21 +24,41 @@ __creation_date__ = "03/07/2019"
 log = None
 
 
-class ChristmasLabelsClass:
+class FullMainMenuFrameClass(MainMenuFrameClass):
+    """
+    Implement details of GUI methods.
+    """
+
+    # def __init__(self, *args, **kwargs):
+    #     MainMenuFrameClass.__init__(self, *args, **kwargs)
+    #
+    #     return
+
+    def on_button_quit_clicked(self, event):
+        """
+        Implement the main quit button to shut down the application.
+
+        :param event:
+        :return:
+        """
+        self.Close()
+        return
+
+class ChristmasLabelsClass(ChristmasLabelsApp):
     """
     ChristmasLabelsClass - Manage christmas labels user interface.
     """
 
-    def __init__(self):
-        self.clg = MainMenuFrame()
+    def __init__(self, *args, **kwargs):
+        ChristmasLabelsApp.__init__(self, *args, **kwargs)
 
-    def run_CLbls(self):
-        """
-        Top method for running Run the Christmas labels user interface..
+    def OnInit(self, working_dir: Path = None):
 
-        :return:
-        """
-        pass
+        # set up my version of the main menu frame
+        self.main_menu_frame = FullMainMenuFrameClass(None, wx.ID_ANY, "")
+        self.SetTopWindow(self.main_menu_frame)
+        self.main_menu_frame.Show()
+        return True
 
 
 class Main:
@@ -46,6 +71,7 @@ class Main:
         Get things started.
         """
         self.ChrLbls = None
+        self.working_dir = None
         return
 
     def run_ChrLbls(self):
@@ -54,13 +80,18 @@ class Main:
 
         :return:
         """
-        self.ChrLbls = ChristmasLabelsClass()
         debug('Starting up ChrLbls')
-        self.ChrLbls.run_CLbls()
+        gettext.install('Why Me')
+
+        # create db if needed
+        db_created = create_db(self.working_dir)
+        debug(f'Database created? {db_created}')
+
+        self.ChrLbls = ChristmasLabelsClass(0)
+        self.ChrLbls.MainLoop()
         return
 
-    @staticmethod
-    def start_logging(work_dir: Path, debug_name: str):
+    def start_logging(self, work_dir: Path, debug_name: str):
         """
         Establish the logging for all the other scripts.
 
@@ -84,7 +115,7 @@ class Main:
             try:
                 #  get the logging params from yaml file and instantiate a log
                 with open(_logfilename, 'r') as _logdictfd:
-                    _logdict = yaml.load(_logdictfd)
+                    _logdict = yaml.load(_logdictfd, Loader=yaml.FullLoader)
                 logging.config.dictConfig(_logdict)
                 logging_started = True
             except Exception as xcp:
@@ -107,6 +138,7 @@ class Main:
         global log
         log = logging.getLogger(__name__)
         logging.info(f'Logging started: working directory is {_workdir}')
+        self.working_dir = _workdir
         return
 
 

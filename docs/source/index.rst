@@ -14,6 +14,8 @@ Welcome to Christmas Labels's documentation!
 
    UML Diagrams
 
+   Schema
+
 Indices and tables
 ==================
 
