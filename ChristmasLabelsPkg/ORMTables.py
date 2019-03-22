@@ -81,8 +81,11 @@ def create_db(working_directory: Path) -> Boolean:
     # check for prior existnce of database before creating a new one.
     full_db_path = working_directory / db_name
     if not full_db_path.exists():
-        Base.metadata.create_all(engine)
-        new_database_created = True
+        response = input('\a\a\a*** Database not found!  Do you want to '
+                         'create a new one? [yes/No] ')
+        if response == 'yes':
+            Base.metadata.create_all(engine)
+            new_database_created = True
     return new_database_created
 
 # EOF
